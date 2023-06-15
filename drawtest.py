@@ -2,8 +2,8 @@ import drawsvg as draw
 import numpy as np
 import math
 
-d = draw.Drawing(1100, 100, origin=(-50,-50))
-origin = (50, 50)
+origin = (-100, -10)
+d = draw.Drawing(1200, 500, origin=origin)
 scaleLength = 1000
 shortTick = 3
 medTick = 5
@@ -14,19 +14,6 @@ d.set_pixel_scale(1)  # Set number of pixels per geometry unit
 #d.set_render_size(400, 200)  # Alternative to set_pixel_scale
 
 
-
-#def drawLScale(yOffset):
-#    print("Drawing L scale")
-##    yOffset = 0;
-#    for n in range(0, 201):
-#        if n % 20 == 0:
-#            tickLen = longTick
-#            d.append(draw.Text(str(int(n/20)), 8, origin[0]+(n*scaleLength/200), origin[1] + yOffset+2+longTick+8, fill='black'))
-#        elif n%2 == 0:
-#            tickLen = medTick
-#        else:
-#            tickLen = shortTick
-#        d.append(draw.Line(origin[0]+(n*scaleLength/200), origin[1] + yOffset, origin[0]+(n*scaleLength/200), origin[1] + yOffset+tickLen, stroke='black', stroke_width=1, fill='none'))
 
 def drawTick(xOffset, yOffset, length, label, flip):
     print("DrawTick")
@@ -55,45 +42,6 @@ def drawLScale(divs, yOffset, flip):
             tickLen=shortTick
         drawTick((scaleLength/divs)*n, yOffset, tickLen, label, flip)
 
-def drawCScale(divs, divs2, yOffset, flip):
-    #divs from 1 to 2
-    for n in range(0,divs):
-        label = ""
-        if n % (divs/10) == 0:
-            tickLen=longTick
-            label = "{:.2g}".format(1+((1/divs)*n))
-        elif n%2 == 0:
-            tickLen=medTick
-        else:
-            tickLen=shortTick
-        linVal = 1+(n*(1/divs))
-        logVal = math.log10(linVal);
-        drawTick(scaleLength*logVal, yOffset, tickLen, label, flip)
-    #divs from 2 to 5
-    for n in range(0,divs2):
-        label = ""
-        if n % (divs2/6) == 0:
-            tickLen=longTick
-            label = "{:.2g}".format(2+((3/divs2)*n))
-        elif n%2 == 0:
-            tickLen=medTick
-        else:
-            tickLen=shortTick
-        linVal = 2+(n*(3/divs2))
-        logVal = math.log10(linVal);
-        drawTick(scaleLength*logVal, yOffset, tickLen, label, flip)
-    for n in range(0,divs+1):
-        label = ""
-        if n % (divs/10) == 0:
-            tickLen=longTick
-            label = "{:.2g}".format(5+((5/divs)*n))
-        elif n%2 == 0:
-            tickLen=medTick
-        else:
-            tickLen=shortTick
-        linVal = 5+(n*(5/divs))
-        logVal = math.log10(linVal);
-        drawTick(scaleLength*logVal, yOffset, tickLen, label, flip)
 
 def drawLogScale(divs, labelCount, start, end, yOffset, flip, scale, addOne):
     if addOne == True:
@@ -111,88 +59,64 @@ def drawLogScale(divs, labelCount, start, end, yOffset, flip, scale, addOne):
         logVal = math.log10(linVal)*scale;
         drawTick(scaleLength*logVal, yOffset, tickLen, label, flip)
 
-def drawAScale(divs, divs2, yOffset, flip):
-    #divs from 1 to 2
-    for n in range(0,divs):
-        label = ""
-        if n % (divs/10) == 0:
-            tickLen=longTick
-            label = "{:.1g}".format(1+((1/divs)*n))
-        elif n%2 == 0:
-            tickLen=medTick
-        else:
-            tickLen=shortTick
-        linVal = 1+(n*(1/divs))
-        logVal = math.log10(linVal);
-        drawTick(scaleLength*logVal/2, yOffset, tickLen, label, flip)
-    #divs from 2 to 5
-    for n in range(0,divs2):
-        label = ""
-        if n % (divs2/6) == 0:
-            tickLen=longTick
-            label = "{:.1g}".format(2+((3/divs2)*n))
-        elif n%2 == 0:
-            tickLen=medTick
-        else:
-            tickLen=shortTick
-        linVal = 2+(n*(3/divs2))
-        logVal = math.log10(linVal);
-        drawTick(scaleLength*logVal/2, yOffset, tickLen, label, flip)
-    for n in range(0,divs):
-        label = ""
-        if n % (divs/10) == 0:
-            tickLen=longTick
-            label = "{:.1g}".format(5+((5/divs)*n))
-        elif n%2 == 0:
-            tickLen=medTick
-        else:
-            tickLen=shortTick
-        linVal = 5+(n*(5/divs))
-        logVal = math.log10(linVal);
-        drawTick(scaleLength*logVal/2, yOffset, tickLen, label, flip)
-    #divs from 10 to 20
-    for n in range(0,divs):
-        label = ""
-        if n % (divs/10) == 0:
-            tickLen=longTick
-            label = "{:.0f}".format(10+((10/divs)*n))
-        elif n%2 == 0:
-            tickLen=medTick
-        else:
-            tickLen=shortTick
-        linVal = 10+(n*(10/divs))
-        logVal = math.log10(linVal);
-        drawTick(scaleLength*logVal/2, yOffset, tickLen, label, flip)
-    #divs from 20 to 50
-    for n in range(0,divs2):
-        label = ""
-        if n % (divs2/6) == 0:
-            tickLen=longTick
-            label = "{:.0f}".format(20+((30/divs2)*n))
-        elif n%2 == 0:
-            tickLen=medTick
-        else:
-            tickLen=shortTick
-        linVal = 20+(n*(30/divs2))
-        logVal = math.log10(linVal);
-        drawTick(scaleLength*logVal/2, yOffset, tickLen, label, flip)
-    for n in range(0,divs+1):
-        label = ""
-        if n % (divs/10) == 0:
-            tickLen=longTick
-            label = "{:.0f}".format(50+((50/divs)*n))
-        elif n%2 == 0:
-            tickLen=medTick
-        else:
-            tickLen=shortTick
-        linVal = 50+(n*(50/divs))
-        logVal = math.log10(linVal);
-        drawTick(scaleLength*logVal/2, yOffset, tickLen, label, flip)
+def drawCScale(yOffset, flip): 
+    drawLogScale(50,10,1,2,yOffset,flip,1,False)
+    drawLogScale(60,6,2,5,yOffset,flip,1,False)
+    drawLogScale(50,10,5,10,yOffset,flip,1,True)
+
+def drawAScale(yOffset, flip):
+    drawLogScale(20,10,1,2,yOffset,flip,.5,False)
+    drawLogScale(30,6,2,5,yOffset,flip,.5,False)
+    drawLogScale(25,10,5,10,yOffset,flip,.5,False)
+    drawLogScale(20,10,10,20,yOffset,flip,.5,False)
+    drawLogScale(30,6,20,50,yOffset,flip,.5,False)
+    drawLogScale(25,10,50,100,yOffset,flip,.5,True)
 
 
-#drawLScale(200, 0, True)
-drawCScale(50, 60, 0, False)
-#drawAScale(20, 30, 0, False)
-drawLogScale(50,10,1,2,0,True,1,True)
-d.save_svg('example.svg')
-d.save_png('example.png')
+def drawKScale(yOffset, flip):
+    drawLogScale(20,5,1,2,yOffset,flip,1/3,False)
+    drawLogScale(30,6,2,5,yOffset,flip,1/3,False)
+    drawLogScale(25,5,5,10,yOffset,flip,1/3,False)
+    drawLogScale(20,5,10,20,yOffset,flip,1/3,False)
+    drawLogScale(30,6,20,50,yOffset,flip,1/3,False)
+    drawLogScale(25,5,50,100,yOffset,flip,1/3,False)
+    drawLogScale(20,5,100,200,yOffset,flip,1/3,False)
+    drawLogScale(30,6,200,500,yOffset,flip,1/3,False)
+    drawLogScale(25,5,500,1000,yOffset,flip,1/3,True)
+
+
+def upperRule():
+    extraLen = 70;
+    d.append(draw.Rectangle(-extraLen, 0, scaleLength+extraLen*2,60, stroke='black', fill='none'))
+    drawAScale(60, True)
+    drawLScale(200, 35, True)
+
+def lowerRule():
+    slideWidth = 60
+    topWidth = 60
+    extraLen = 70
+    d.append(draw.Rectangle(-extraLen, topWidth+slideWidth, scaleLength+extraLen*2,60, stroke='black', fill='none'))
+    drawCScale(topWidth+slideWidth, False)
+    drawKScale(25+topWidth+slideWidth, False)
+
+def outerRule():
+    upperRule()
+    lowerRule()
+
+def slide():
+    extraLen = 70
+    d.append(draw.Rectangle(-extraLen, 0, scaleLength+extraLen*2,60, stroke='black', fill='none'))
+    drawAScale(0, False)
+    drawCScale(60, True)
+
+outerRule()
+
+
+d.save_svg('outer.svg')
+d.save_png('outer.png')
+
+
+d = draw.Drawing(1200, 500, origin=origin)
+slide()
+d.save_svg("slide.svg")
+d.save_png("slide.png")

@@ -2,8 +2,16 @@ import drawsvg as draw
 import numpy as np
 import math
 
+
+strokeWidth = 0.1
+ruleLen = 1000
 origin = (-100, -10)
 d = draw.Drawing(1200, 500, origin=origin)
+textLayer = draw.Drawing(1200, 500, origin=origin)
+cutLayer = draw.Drawing(1200, 500, origin=origin)
+tickLayer = draw.Drawing(1200, 500, origin=origin)
+engraveLayer = draw.Drawing(1200, 500, origin=origin)
+
 scaleLength = 1000
 shortTick = 3
 medTick = 5
@@ -11,6 +19,9 @@ longTick = 7
 #d.append(draw.Line(30, 20, 0, 10, stroke='red', stroke_width=1, fill='none'))
 
 d.set_pixel_scale(1)  # Set number of pixels per geometry unit
+textLayer.set_pixel_scale(1)  # Set number of pixels per geometry unit
+cutLayer.set_pixel_scale(1)  # Set number of pixels per geometry unit
+tickLayer.set_pixel_scale(1)  # Set number of pixels per geometry unit
 #d.set_render_size(400, 200)  # Alternative to set_pixel_scale
 
 
@@ -18,11 +29,15 @@ d.set_pixel_scale(1)  # Set number of pixels per geometry unit
 def drawTick(xOffset, yOffset, length, label, flip):
     print("DrawTick")
     if flip == False:
-        d.append(draw.Line(xOffset, yOffset, xOffset, yOffset+length, stroke='black', stroke_width=1, fill='none'))
-        d.append(draw.Text(label, 8, xOffset, yOffset+2+length+8, stroke_width=1, fill='none'))
+        d.append(draw.Line(xOffset, yOffset, xOffset, yOffset+length, stroke='black', stroke_width=strokeWidth, fill='none'))
+        tickLayer.append(draw.Line(xOffset, yOffset, xOffset, yOffset+length, stroke='black', stroke_width=strokeWidth, fill='none'))
+        d.append(draw.Text(label, 8, xOffset, yOffset+2+length+8, fill='black'))
+        textLayer.append(draw.Text(label, 8, xOffset, yOffset+2+length+8, fill='black'))
     else:
-        d.append(draw.Line(xOffset, yOffset, xOffset, yOffset-length, stroke='black', stroke_width=1, fill='none'))
-        d.append(draw.Text(label, 8, xOffset, yOffset - (2 +length),stroke_width=1 , fill='none'))
+        d.append(draw.Line(xOffset, yOffset, xOffset, yOffset-length, stroke='black', stroke_width=strokeWidth, fill='none'))
+        d.append(draw.Text(label, 8, xOffset, yOffset - (2 +length), fill='black'))
+        tickLayer.append(draw.Line(xOffset, yOffset, xOffset, yOffset-length, stroke='black', stroke_width=strokeWidth, fill='none'))
+        textLayer.append(draw.Text(label, 8, xOffset, yOffset - (2 +length), fill='black'))
 
 def float2str(me):
     if(me < 10):
@@ -87,7 +102,8 @@ def drawKScale(yOffset, flip):
 
 def upperRule():
     extraLen = 70;
-    d.append(draw.Rectangle(-extraLen, 0, scaleLength+extraLen*2,60, stroke='black', fill='none'))
+    d.append(draw.Rectangle(-extraLen, 0, scaleLength+extraLen*2,60, stroke='black',stroke_width=strokeWidth, fill='none'))
+    cutLayer.append(draw.Rectangle(-extraLen, 0, scaleLength+extraLen*2,60, stroke='black',stroke_width=strokeWidth, fill='none'))
     drawAScale(60, True)
     drawLScale(200, 35, True)
 
@@ -95,7 +111,8 @@ def lowerRule():
     slideWidth = 60
     topWidth = 60
     extraLen = 70
-    d.append(draw.Rectangle(-extraLen, topWidth+slideWidth, scaleLength+extraLen*2,60, stroke='black', fill='none'))
+    d.append(draw.Rectangle(-extraLen, topWidth+slideWidth, scaleLength+extraLen*2,60,stroke_width=strokeWidth, stroke='black', fill='none'))
+    cutLayer.append(draw.Rectangle(-extraLen, topWidth+slideWidth, scaleLength+extraLen*2,60,stroke_width=strokeWidth, stroke='black', fill='none'))
     drawCScale(topWidth+slideWidth, False)
     drawKScale(25+topWidth+slideWidth, False)
 
@@ -105,7 +122,8 @@ def outerRule():
 
 def slide():
     extraLen = 70
-    d.append(draw.Rectangle(-extraLen, 0, scaleLength+extraLen*2,60, stroke='black', fill='none'))
+    d.append(draw.Rectangle(-extraLen, 0, scaleLength+extraLen*2,60, stroke='black',stroke_width=strokeWidth, fill='none'))
+    cutLayer.append(draw.Rectangle(-extraLen, 0, scaleLength+extraLen*2,60, stroke='black',stroke_width=strokeWidth, fill='none'))
     drawAScale(0, False)
     drawCScale(60, True)
 
@@ -114,9 +132,17 @@ outerRule()
 
 d.save_svg('outer.svg')
 d.save_png('outer.png')
-
+cutLayer.save_svg('outercut.svg')
+tickLayer.save_svg('outerticks.svg')
+textLayer.save_svg('outertext.svg')
 
 d = draw.Drawing(1200, 500, origin=origin)
+tickLayer = draw.Drawing(1200, 500, origin=origin)
+textLayer = draw.Drawing(1200, 500, origin=origin)
+cutLayer = draw.Drawing(1200, 500, origin=origin)
 slide()
 d.save_svg("slide.svg")
 d.save_png("slide.png")
+cutLayer.save_svg('cut.svg')
+tickLayer.save_svg('ticks.svg')
+textLayer.save_svg('text.svg')
